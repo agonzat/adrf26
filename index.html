@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADRA Forum 2026 — Interactive Agenda</title>
+    <meta
+      name="description"
+      content="Interactive agenda for AI, Data, Robotics Forum 2026 (Porto, 13–14 October)."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <p class="hero__eyebrow">AI, Data, Robotics Forum 2026</p>
+        <h1 class="hero__title">Interactive Agenda</h1>
+        <p class="hero__meta">13–14 October 2026 · Porto, Portugal</p>
+        <a
+          class="hero__source"
+          href="https://adrforum.eu/plenary-keynotes-and-workshops-overview-2026"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Programme source ↗</a
+        >
+      </div>
+    </header>
+
+    <main class="container main">
+      <section class="controls" aria-label="Agenda filters">
+        <div class="control-group">
+          <label for="searchInput">Search</label>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search by title, speaker, location..."
+          />
+        </div>
+
+        <div class="control-group">
+          <label for="dayFilter">Day</label>
+          <select id="dayFilter">
+            <option value="all">All days</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="trackFilter">Track</label>
+          <select id="trackFilter">
+            <option value="all">All tracks</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="typeFilter">Type</label>
+          <select id="typeFilter">
+            <option value="all">All types</option>
+          </select>
+        </div>
+
+        <button id="clearBtn" class="btn btn--secondary" type="button">
+          Clear filters
+        </button>
+      </section>
+
+      <section class="summary" aria-live="polite">
+        <p id="resultCount">Loading sessions...</p>
+      </section>
+
+      <section id="agenda" class="agenda" aria-label="Agenda sessions"></section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          Built for GitHub Pages · Data adapted from the official ADRA Forum 2026
+          programme page.
+        </p>
+      </div>
+    </footer>
+
+    <script src="agenda.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
