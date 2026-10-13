@@ -60,10 +60,14 @@
       modalList.append(dt, dd);
     });
 
-    // Optional `description` field in agenda.js; fallback message otherwise.
-    modalDesc.textContent =
-      session.description ||
-      "A detailed description has not been published yet. Please check the official programme page.";
+    // Optional `description` field in agenda.js; show only when available.
+    if (session.description && session.description.trim()) {
+      modalDesc.textContent = session.description.trim();
+      modalDesc.hidden = false;
+    } else {
+      modalDesc.textContent = "";
+      modalDesc.hidden = true;
+    }
 
     lastFocus = document.activeElement;
     overlay.hidden = false;
