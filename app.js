@@ -9,6 +9,34 @@
   const tabButtons = document.querySelectorAll(".tab-btn");
 
   /**
+   * Convert the start of a "HH:MM - HH:MM" range to minutes since midnight.
+   * @param {string} time - Time range string.
+   * @returns {number} Start time in minutes (large value if unparsable).
+   */
+  function startMinutes(time) {
+    const match = /(\d{1,2}):(\d{2})/.exec(time || "");
+    return match ? Number(match[1]) * 60 + Number(match[2]) : 24 * 60;
+  }
+
+  /**
+   * Compare two sessions by date, start time, then track/location.
+   * @param {Object} a - First session.
+   * @param {Object} b - Second session.
+   * @returns {number} Sort order value.
+   */
+  function compareSessions(a, b) {
+    return (
+      a.date.localeCompare(b.date) ||
+      startMinutes(a.time) - startMinutes(b.time) ||
+      (a.location || "").localeCompare(b.location || "") ||
+      a.title.localeCompare(b.title)
+    );
+  }
+
+  // Sorted copy so the source dataset order does not matter.
+  const sortedAgenda = [...agendaData].sort(compareSessions);
+
+  /**
    * Add unique option values to a select input.
    * @param {HTMLSelectElement} selectElement - Select to populate.
    * @param {string[]} values - Option values.
@@ -28,7 +56,7 @@
    * @returns {string} Normalized type.
    */
   function normalizeType(type) {
-    return type.toLowerCase().replace(/\s+/g, "-");
+    return type.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   }
 
   /**
@@ -44,7 +72,7 @@
 
   /**
    * Render agenda cards grouped by day.
-   * @param {Array<Object>} sessions - Sessions to display.
+   * @param {Array<Object>} sessions - Sessions to display (already sorted).
    * @returns {void}
    */
   function render(sessions) {
@@ -61,11 +89,10 @@
     countRoot.textContent = `${sessions.length} session${sessions.length > 1 ? "s" : ""} found.`;
 
     const byDay = sessions.reduce((acc, session) => {
-      const key = session.day;
-      if (!acc[key]) {
-        acc[key] = [];
+      if (!acc[session.day]) {
+        acc[session.day] = [];
       }
-      acc[key].push(session);
+      acc[session.day].push(session);
       return acc;
     }, {});
 
@@ -116,7 +143,7 @@
     const track = trackFilter.value;
     const type = typeFilter.value;
 
-    const filtered = agendaData.filter((session) => {
+    const filtered = sortedAgenda.filter((session) => {
       const matchesSearch =
         search.length === 0 ||
         [session.title, session.speakers, session.location, session.track, session.type]
@@ -135,9 +162,9 @@
     render(filtered);
   }
 
-  const days = [...new Set(agendaData.map((item) => item.day))];
-  const tracks = [...new Set(agendaData.map((item) => item.track))];
-  const types = [...new Set(agendaData.map((item) => item.type))];
+  const days = [...new Set(sortedAgenda.map((item) => item.day))];
+  const tracks = [...new Set(sortedAgenda.map((item) => item.track))];
+  const types = [...new Set(sortedAgenda.map((item) => item.type))];
 
   populateSelect(dayFilter, days);
   populateSelect(trackFilter, tracks);
@@ -163,5 +190,5 @@
     applyFilters();
   });
 
-  render(agendaData);
+  render(sortedAgenda);
 })();
