@@ -7,6 +7,7 @@
   const typeFilter = document.getElementById("typeFilter");
   const clearBtn = document.getElementById("clearBtn");
   const tabButtons = document.querySelectorAll(".tab-btn");
+  const controls = document.querySelector(".controls");
 
   /**
    * Convert the start of a "HH:MM - HH:MM" range to minutes since midnight.
@@ -188,6 +189,32 @@
     trackFilter.value = "all";
     typeFilter.value = "all";
     applyFilters();
+  });
+
+  // Hide filters on scroll down and show on scroll up (mobile-first).
+  let lastScrollY = window.scrollY;
+  function handleScroll() {
+    if (!controls || window.innerWidth > 640) {
+      return;
+    }
+
+    const currentY = window.scrollY;
+    const delta = currentY - lastScrollY;
+
+    if (currentY < 40 || delta < -5) {
+      controls.classList.remove("controls--hidden");
+    } else if (delta > 5) {
+      controls.classList.add("controls--hidden");
+    }
+
+    lastScrollY = currentY;
+  }
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 640 && controls) {
+      controls.classList.remove("controls--hidden");
+    }
   });
 
   render(sortedAgenda);
