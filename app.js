@@ -6,6 +6,7 @@
   const trackFilter = document.getElementById("trackFilter");
   const typeFilter = document.getElementById("typeFilter");
   const clearBtn = document.getElementById("clearBtn");
+  const tabButtons = document.querySelectorAll(".tab-btn");
 
   /**
    * Add unique option values to a select input.
@@ -28,6 +29,17 @@
    */
   function normalizeType(type) {
     return type.toLowerCase().replace(/\s+/g, "-");
+  }
+
+  /**
+   * Toggle active state for mobile day tabs.
+   * @param {string} day - Selected day value.
+   * @returns {void}
+   */
+  function updateActiveTab(day) {
+    tabButtons.forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.day === day);
+    });
   }
 
   /**
@@ -119,6 +131,7 @@
       return matchesSearch && matchesDay && matchesTrack && matchesType;
     });
 
+    updateActiveTab(day);
     render(filtered);
   }
 
@@ -133,6 +146,13 @@
   [searchInput, dayFilter, trackFilter, typeFilter].forEach((element) => {
     element.addEventListener("input", applyFilters);
     element.addEventListener("change", applyFilters);
+  });
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      dayFilter.value = button.dataset.day;
+      applyFilters();
+    });
   });
 
   clearBtn.addEventListener("click", () => {
